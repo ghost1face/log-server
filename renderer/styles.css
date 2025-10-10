@@ -1,0 +1,91 @@
+/** begin toolbar styles */
+
+/* MARK: Toolbar styles */
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ccc;
+}
+
+.toolbar-search-box {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.toolbar-search-box:focus {
+  outline: none;
+  border-color: #0078d7;
+  box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+}
+
+/** end toolbar styles */
+
+/** begin log list styles */
+
+/* MARK: Log list styles */
+
+#log-list {
+  display: grid;
+  grid-template-columns: 100px 100px 1fr; /* Three columns: Timestamp, Level, Message */
+  gap: 1px; /* Adds a small gap between cells for visual separation */
+  border: 1px solid #ccc;
+}
+
+.log-list-header {
+  background-color: #f0f0f0;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc; /* Optional: Separator for header */
+}
+
+.log-list-cell {
+  padding: 10px;
+  border-bottom: 1px solid #eee; /* Optional: Separator for rows */
+}
+
+.log-timestamp {
+  font-weight: bold;
+}
+
+.log-level {
+  font-weight: bold;
+}
+
+.log-level-trace {
+  color: lightgray;
+}
+
+.log-level-debug {
+  color: gray;
+}
+
+.log-level-info {
+  color: blue;
+}
+
+.log-level-warn {
+  color: orange;
+}
+
+.log-level-error {
+  color: red;
+}
+
+.log-message {
+  word-wrap: break-word;
+}
+
+#no-logs {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/** end log list styles */
