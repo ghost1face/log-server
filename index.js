@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { createProxyApi } = require("./network/proxyapi.js");
+const { ProxyApi } = require("./network/proxyapi.js");
 const { createProxyServer } = require("./network/logserver.js");
 
 /**
@@ -31,12 +31,22 @@ const createWindow = () => {
 app.whenReady().then(() => {
   const win = createWindow();
 
-  proxyApi = createProxyApi(win);
-  proxyServer = createProxyServer(proxyApi);
+  proxyApi = new ProxyApi(win);
+  proxyApi.on("start-recording", () => {
+    // start server logging
+    const port = 3000;
+    console.log(`Starting proxy server on port ${port}`);
+    proxyServer = createProxyServer(proxyApi);
+    proxyServer.listen(port);
+  });
 
-  proxyServer.listen(3000);
+  proxyApi.on("stop-recording", () => {
+    // stop server logging
+    proxyServer?.close();
+  });
 });
 
 app.on("window-all-closed", () => {
   proxyServer?.close();
+  proxyApi?.destroy();
 });

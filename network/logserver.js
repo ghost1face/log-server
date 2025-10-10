@@ -26,7 +26,7 @@ function createProxyServer(proxyApi) {
       return;
     }
 
-    if (!proxyApi.isRecording()) {
+    if (!proxyApi.isRecording) {
       // not recording, ignore the log message
       res.writeHead(204);
       res.end();

@@ -1,4 +1,5 @@
 const { ipcMain } = require("electron");
+const EventEmitter = require("events");
 
 /**
  * @typedef {Object} LogMessage
@@ -13,53 +14,73 @@ const { ipcMain } = require("electron");
  */
 
 /**
- * @typedef {Object} ProxyApi
- * @property {(log: LogMessage) => void} sendLog
-//  * @property {() => Promise<void>} startRecording
-//  * @property {() => Promise<void>} stopRecording
- * @property {() => boolean} isRecording
+ * @typedef {Object} ProxyApiEvents
+ * @property {() => void} start-recording
+ * @property {() => void} stop-recording
  */
 
 /**
- * Create a proxy API for the renderer process
- * @param {Electron.BrowserWindow} win
- * @returns {ProxyApi} the proxy API
+ * Proxy API for the renderer process
+ * @extends {EventEmitter<ProxyApiEvents>}
  */
-const createProxyApi = (win) => {
-  let isRecording = false;
+class ProxyApi extends EventEmitter {
+  isRecording = false;
 
-  ipcMain.handle("start-recording", () => {
-    isRecording = true;
-  });
+  /**
+   * @type {Electron.BrowserWindow}
+   */
+  win = null;
 
-  ipcMain.handle("stop-recording", () => {
-    isRecording = false;
-  });
+  constructor(win) {
+    super();
+    this.win = win;
 
-  return {
-    /**
-     * Send a log message to the renderer process
-     * @param {LogMessage} log
-     */
-    sendLog: (log) => {
-      win.webContents.send("log", log);
-    },
+    ipcMain.handle("start-recording", () => {
+      this.startRecording();
+    });
 
-    // startRecording: () => {
-    //   return ipcRenderer.invoke("start-recording");
-    // },
+    ipcMain.handle("stop-recording", () => {
+      this.stopRecording();
+    });
+  }
 
-    // stopRecording: () => {
-    //   return ipcRenderer.invoke("stop-recording");
-    // },
-
-    isRecording: () => isRecording,
-
-    close: () => {
-      ipcMain.removeHandler("start-recording");
-      ipcMain.removeHandler("stop-recording");
-    },
+  /**
+   * Send a log message to the renderer process
+   * @param {LogMessage} log
+   */
+  sendLog = (log) => {
+    this.win.webContents.send("log", log);
   };
-};
 
-module.exports = { createProxyApi };
+  /**
+   * Check if recording is active
+   * @returns {boolean} whether recording is active
+   */
+  isRecording = () => {
+    return this.isRecording;
+  };
+
+  /**
+   * Start recording log messages
+   */
+  startRecording = () => {
+    this.emit("start-recording");
+    this.isRecording = true;
+  };
+
+  /**
+   * Stop recording log messages
+   */
+  stopRecording = () => {
+    this.emit("stop-recording");
+    this.isRecording = false;
+  };
+
+  destroy() {
+    this.removeAllListeners();
+    ipcMain.removeHandler("start-recording");
+    ipcMain.removeHandler("stop-recording");
+  }
+}
+
+module.exports = { ProxyApi };
