@@ -17,7 +17,7 @@ function formatTimestamp(timestamp) {
 
 /**
  * A custom hook to manage log messages received from the main process
- * @returns {import('../network/proxyapi').LogMessage[]}
+ * @returns {[import('../network/proxyapi').LogMessage[], () => void]} the log messages and a function to clear them
  */
 const useLogMessages = () => {
   /**
@@ -31,7 +31,11 @@ const useLogMessages = () => {
     });
   }, []);
 
-  return logMessages;
+  const clearLogMessages = () => {
+    setLogMessages([]);
+  };
+
+  return [logMessages, clearLogMessages];
 };
 
 /**
@@ -87,11 +91,17 @@ const useSortLogMessages = (logMessages, sortBy, order) => {
  * Toolbar component with search box and recording toggle button
  * @param {Object} props
  * @param {boolean} props.isRecording whether recording is active
+ * @param {() => void} props.onClearLogs callback for when the clear logs button is clicked
  * @param {(query: string) => void} props.onQueryChange callback for when the search query changes
  * @param {() => void} props.onToggleRecording callback for when the recording button is clicked
  * @returns {import('preact').JSX.Element}
  */
-function Toolbar({ isRecording, onQueryChange, onToggleRecording }) {
+function Toolbar({
+  isRecording,
+  onClearLogs,
+  onQueryChange,
+  onToggleRecording,
+}) {
   return html`
     <div id="toolbar">
       <input
@@ -103,6 +113,7 @@ function Toolbar({ isRecording, onQueryChange, onToggleRecording }) {
       <button id="toggle-recording" onClick=${onToggleRecording}>
         ${isRecording ? "Stop Recording" : "Start Recording"}
       </button>
+      <button id="clear-logs" onClick=${onClearLogs}>Clear Logs</button>
     </div>
   `;
 }
@@ -210,13 +221,17 @@ function App() {
   const [sortBy, setSortBy] = useState("timestamp");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const logMessages = useLogMessages();
+  const [logMessages, clearLogMessages] = useLogMessages();
   const filteredMessages = useFilterLogMessages(logMessages, query);
   const sortedAndFilteredMessages = useSortLogMessages(
     filteredMessages,
     sortBy,
     sortOrder
   );
+
+  const onClearLogs = () => {
+    clearLogMessages();
+  };
 
   const onSortChange = (field) => {
     if (sortBy === field) {
@@ -240,6 +255,7 @@ function App() {
   return html`<div>
     <${Toolbar}
       isRecording=${isRecording}
+      onClearLogs=${onClearLogs}
       onQueryChange=${setQuery}
       onToggleRecording=${handleToggleRecording}
     />
