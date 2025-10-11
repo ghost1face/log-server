@@ -1,0 +1,41 @@
+#settings-screen {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#settings-screen h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#settings-screen label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#settings-screen input[type="text"],
+#settings-screen input[type="number"],
+#settings-screen select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#settings-screen .settings-row {
+  margin-bottom: 15px;
+  display: flex;
+}
+
+#settings-screen .settings-label {
+  flex: 1;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#settings-screen .settings-control {
+  flex: 1;
+}

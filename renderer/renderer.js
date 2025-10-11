@@ -1,6 +1,7 @@
 import { h, render, Fragment } from "https://esm.sh/preact";
 import { useState, useEffect } from "https://esm.sh/preact/hooks";
 import htm from "https://esm.sh/htm";
+import { SettingsScreen } from "./screens/settings/index.js";
 
 // Initialize htm with Preact
 const html = htm.bind(h);
@@ -17,11 +18,11 @@ function formatTimestamp(timestamp) {
 
 /**
  * A custom hook to manage log messages received from the main process
- * @returns {[import('../network/proxyapi').LogMessage[], () => void]} the log messages and a function to clear them
+ * @returns {[import('../main/network/proxyapi.js').LogMessage[], () => void]} the log messages and a function to clear them
  */
 const useLogMessages = () => {
   /**
-   * @type {[import('../network/proxyapi').LogMessage[], import('react').SetStateAction<import('../network/proxyapi').LogMessage[]>]}
+   * @type {[import('../main/network/proxyapi.js').LogMessage[], import('react').SetStateAction<import('../main/network/proxyapi.js').LogMessage[]>]}
    */
   const [logMessages, setLogMessages] = useState([]);
 
@@ -40,12 +41,12 @@ const useLogMessages = () => {
 
 /**
  * A custom hook to filter log messages based on a search query
- * @param {import('../network/proxyapi').LogMessage[]} logMessages
+ * @param {import('../main/network/proxyapi.js').LogMessage[]} logMessages
  * @param {string} query
  */
 const useFilterLogMessages = (logMessages, query) => {
   /**
-   * @type {[import('../network/proxyapi').LogMessage[], import('react').SetStateAction<import('../network/proxyapi').LogMessage[]>]}
+   * @type {[import('../main/network/proxyapi.js').LogMessage[], import('react').SetStateAction<import('../main/network/proxyapi.js').LogMessage[]>]}
    */
   const [filteredMessages, setFilteredMessages] = useState([]);
 
@@ -59,14 +60,14 @@ const useFilterLogMessages = (logMessages, query) => {
 
 /**
  * A custom hook to sort log messages by a given field and order
- * @param {import('../network/proxyapi').LogMessage[]} logMessages the log messages to sort
+ * @param {import('../main/network/proxyapi.js').LogMessage[]} logMessages the log messages to sort
  * @param {String} sortBy the field to sort by
  * @param {"asc" | "desc"} order the sort order
- * @returns {import('../network/proxyapi').LogMessage[]} the sorted log messages
+ * @returns {import('../main/network/proxyapi.js').LogMessage[]} the sorted log messages
  */
 const useSortLogMessages = (logMessages, sortBy, order) => {
   /**
-   * @type {[import('../network/proxyapi').LogMessage[], import('react').SetStateAction<import('../network/proxyapi').LogMessage[]>]}
+   * @type {[import('../main/network/proxyapi.js').LogMessage[], import('react').SetStateAction<import('../main/network/proxyapi.js').LogMessage[]>]}
    */
   const [sortedMessages, setSortedMessages] = useState([]);
 
@@ -121,7 +122,7 @@ function Toolbar({
 /**
  * A component that displays a single log message
  * @param {Object} props
- * @param {import('../network/proxyapi').LogMessage} props.entry the log message to display
+ * @param {import('../main/network/proxyapi.js').LogMessage} props.entry the log message to display
  * @returns {import('preact').JSX.Element}
  */
 function LogEntry({ entry }) {
@@ -174,7 +175,7 @@ function LogHeaderCell({ title, order, classNames, onClick }) {
 /**
  * A component that displays a list of log messages
  * @param {Object} props
- * @param {import('../network/proxyapi').LogMessage[]} props.logMessages the log messages to display
+ * @param {import('../main/network/proxyapi.js').LogMessage[]} props.logMessages the log messages to display
  * @param {"asc" | "desc"} props.order the current sort order
  * @param {string} props.orderBy the current sort field
  * @param {(field: string) => void} props.onSortChange callback for when the sort field changes
@@ -269,4 +270,5 @@ function App() {
 }
 
 // MARK: App start
-render(html`<${App} />`, document.body);
+// render(html`<${App} />`, document.body);
+render(html`<${SettingsScreen} />`, document.body);

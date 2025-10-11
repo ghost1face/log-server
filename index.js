@@ -1,11 +1,17 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { ProxyApi } = require("./network/proxyapi.js");
-const { createProxyServer } = require("./network/logserver.js");
+const { ProxyApi } = require("./main/network/proxyapi.js");
+const { createProxyServer } = require("./main/network/logserver.js");
+const { SettingsApi } = require("./main/settings/settingsapi.js");
 
 /**
- * @type {(import('./network/proxyapi.js').ProxyApi) | null}
+ * @type {(import('./main/network/proxyapi.js').ProxyApi) | null}
  */
 let proxyApi = null;
+
+/**
+ * @type {(import('./main/settings/settingsapi.js').SettingsApi) | null}
+ */
+let settingsApi = null;
 
 /**
  * @type {import('http').Server | null}
@@ -23,7 +29,7 @@ const createWindow = () => {
     },
   });
 
-  win.loadFile("renderer/index.html");
+  win.loadFile("./renderer/index.html");
 
   return win;
 };
@@ -32,6 +38,8 @@ app.whenReady().then(() => {
   const win = createWindow();
 
   proxyApi = new ProxyApi(win);
+  settingsApi = new SettingsApi(win);
+
   proxyApi.on("start-recording", () => {
     // start server logging
     const port = 3000;
