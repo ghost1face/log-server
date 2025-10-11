@@ -5,4 +5,11 @@ export {
   useCallback,
   useEffect,
   useState,
+  lazy,
+  LocationProvider,
+  ErrorBoundary,
+  Router,
+  Route,
+  useLocation,
+  useRoute,
 } from "./preact.js";

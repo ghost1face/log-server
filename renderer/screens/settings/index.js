@@ -1,5 +1,5 @@
 import { html } from "../../utils/index.js";
-import { useState } from "../../core/index.js";
+import { useState, useLocation } from "../../core/index.js";
 import { Button } from "../../components/Button/index.js";
 import { TextBox } from "../../components/TextBox/TextBox.js";
 import { SettingsRow } from "./components/SettingsRow.js";
@@ -9,13 +9,24 @@ import { useSettings } from "./hooks/useSettings.js";
 import styles from "./styles.css" with { type: "css" };
 document.adoptedStyleSheets.push(styles);
 
-export const SettingsScreen = () => {
+const SettingsScreen = () => {
   const [settings, updateSettings] = useSettings();
   const [serverPort, setServerPort] = useState(settings.port || 3000);
   const [useTunnel, setUseTunnel] = useState(settings.useTunnel || false);
 
+  const { route } = useLocation();
+
+  const goToHome = () => {
+    route("/index.html");
+  }
+
   return html`<div id="settings-screen">
-    <h1>Settings</h1>
+    <div id="settings-header">
+      <h1>Settings</h1>
+      <a class="close-button" title="Close" onClick=${goToHome}>
+        ✕
+      </a>
+    </div>
     <${SettingsGrid}>
       <${SettingsRow} label="Server Port">
         <input type="text" value=${serverPort} onInput=${(e) => setServerPort(e.target.value)} />
@@ -33,3 +44,5 @@ export const SettingsScreen = () => {
     </${Button}>
   </div>`;
 };
+
+export default SettingsScreen;

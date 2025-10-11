@@ -8,7 +8,7 @@ import styles from "./styles.css" with { type: "css" };
 document.adoptedStyleSheets.push(styles);
 
 
-export const MainScreen = () => {
+const MainScreen = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("timestamp");
@@ -60,3 +60,5 @@ export const MainScreen = () => {
     />
   </div>`;
 }
+
+export default MainScreen;

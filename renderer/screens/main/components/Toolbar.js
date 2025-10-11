@@ -1,5 +1,6 @@
 import { Button } from "../../../components/button/Button.js";
 import { TextBox } from "../../../components/TextBox/TextBox.js";
+import { useLocation } from "../../../core/index.js";
 import { html } from "../../../utils/index.js";
 
 /**
@@ -17,6 +18,12 @@ export function Toolbar({
   onQueryChange,
   onToggleRecording,
 }) {
+  const { route } = useLocation();
+
+  const goToSettings = () => {
+    route("/settings");
+  };
+
   return html`
     <div id="toolbar">
       <${TextBox}
@@ -27,8 +34,13 @@ export function Toolbar({
 
       <${Button} id="toggle-recording" onClick=${onToggleRecording}>
         ${isRecording ? "Stop Recording" : "Start Recording"}
-      <//>
-      <${Button} id="clear-logs" onClick=${onClearLogs}>Clear Logs<//>
+      </${Button}>
+
+      <${Button} id="clear-logs" onClick=${onClearLogs}>Clear Logs</${Button}>
+
+      <${Button} id="settings-button" title="Settings" onClick=${goToSettings}>
+        ⚙
+      </${Button}>
     </div>
   `;
 }
