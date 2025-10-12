@@ -29,11 +29,15 @@ class ProxyApi extends EventEmitter {
   /**
    * @type {Electron.BrowserWindow}
    */
-  win = null;
+  browserWindow = null;
 
-  constructor(win) {
+  /**
+   * Creates an instance of ProxyApi.
+   * @param {Electron.BrowserWindow} browserWindow the browser window to communicate with
+   */
+  constructor(browserWindow) {
     super();
-    this.win = win;
+    this.browserWindow = browserWindow;
 
     ipcMain.handle("start-recording", () => {
       this.startRecording();
@@ -49,7 +53,7 @@ class ProxyApi extends EventEmitter {
    * @param {LogMessage} log
    */
   sendLog = (log) => {
-    this.win.webContents.send("log", log);
+    this.browserWindow.webContents.send("log", log);
   };
 
   /**

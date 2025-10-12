@@ -14,7 +14,37 @@ const { contextBridge, ipcRenderer } = require("electron");
  * @returns {void}
  */
 
-contextBridge.exposeInMainWorld("LogAPI", {
+const SettingsAPI = {
+  /**
+   * Listen for settings updates from the main process
+   * @param {SettingsUpdateCallback} callback the callback to invoke on settings updates
+   * @returns {void}
+   */
+  onSettingsUpdated: (callback) => {
+    /**
+     * @param {Electron.IpcRendererEvent} event
+     * @param {import('../main/settings/settingsapi').LogServerSettings} settings
+     */
+    ipcRenderer.on("settings-updated", (event, settings) => {
+      callback(settings);
+    });
+  },
+
+  /**
+   * Get the current server settings
+   * @returns {Promise<import('../main/settings/settingsapi').LogServerSettings>}
+   */
+  getSettings: () => ipcRenderer.invoke("get-settings"),
+
+  /**
+   * Update the server settings
+   * @param {import('../main/settings/settingsapi').LogServerSettings} settings
+   * @returns {Promise<void>}
+   */
+  updateSettings: (settings) => ipcRenderer.invoke("update-settings", settings),
+};
+
+const LogAPI = {
   startRecording: () => ipcRenderer.invoke("start-recording"),
   stopRecording: () => ipcRenderer.invoke("stop-recording"),
 
@@ -32,35 +62,8 @@ contextBridge.exposeInMainWorld("LogAPI", {
       callback(logMessage);
     });
   },
-});
+};
 
-contextBridge.exposeInMainWorld("SettingsAPI", {
-  /**
-   * Listen for settings updates from the main process
-   * @param {SettingsUpdateCallback} callback the callback to invoke on settings updates
-   * @returns {void}
-   */
-  onSettingsUpdated: (callback) => {
-    /**
-     * @param {Electron.IpcRendererEvent} event
-     * @param {import('../main/settings/settingsapi').LogServerSettings} settings
-     */
-    ipcRenderer.on("settings-updated", (event, settings) => {
-      alert("settings updated");
-      callback(settings);
-    });
-  },
+contextBridge.exposeInMainWorld("LogAPI", LogAPI);
 
-  /**
-   * Get the current server settings
-   * @returns {Promise<import('../main/settings/settingsapi').LogServerSettings>}
-   */
-  getSettings: () => ipcRenderer.invoke("get-settings"),
-
-  /**
-   * Update the server settings
-   * @param {import('../main/settings/settingsapi').LogServerSettings} settings
-   * @returns {Promise<void>}
-   */
-  updateSettings: (settings) => ipcRenderer.invoke("update-settings", settings),
-});
+contextBridge.exposeInMainWorld("SettingsAPI", SettingsAPI);
