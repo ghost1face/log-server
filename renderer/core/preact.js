@@ -1,6 +1,7 @@
 export {
   useState,
   useEffect,
+  useMemo,
   useCallback,
 } from "https://esm.sh/preact@10.27.2/hooks";
 export { h, render, Fragment } from "https://esm.sh/preact@10.27.2";

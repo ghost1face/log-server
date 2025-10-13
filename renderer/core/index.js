@@ -4,6 +4,7 @@ export {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useState,
   lazy,
   LocationProvider,

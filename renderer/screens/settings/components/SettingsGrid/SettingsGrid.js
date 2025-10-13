@@ -1,4 +1,7 @@
-import { html } from "../../../utils/index.js";
+import { html } from "../../../../utils/index.js";
+
+import settingsGridStyles from "./SettingsGrid.css" with { type: "css" };
+document.adoptedStyleSheets.push(settingsGridStyles);
 
 /**
  * SettingsGrid component

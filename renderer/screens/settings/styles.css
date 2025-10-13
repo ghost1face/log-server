@@ -1,4 +1,6 @@
 #settings-screen {
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   font-family: Arial, sans-serif;
 }
