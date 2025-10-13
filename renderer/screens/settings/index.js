@@ -1,5 +1,5 @@
 import { html } from "../../utils/index.js";
-import { useState, useLocation } from "../../core/index.js";
+import { useEffect, useState, useLocation } from "../../core/index.js";
 import { Button } from "../../components/Button/index.js";
 import { TextBox } from "../../components/TextBox/TextBox.js";
 import { SettingsRow } from "./components/SettingsRow.js";
@@ -19,6 +19,11 @@ const SettingsScreen = () => {
   const goToHome = () => {
     route("/index.html");
   }
+
+  useEffect(() => {
+    setServerPort(settings.port || 3000);
+    setUseTunnel(settings.useTunnel || false);
+  }, [settings])
 
   return html`<div id="settings-screen">
     <div id="settings-header">

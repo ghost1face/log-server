@@ -3,6 +3,7 @@ const { ProxyApi } = require("./main/network/proxyapi.js");
 const { createProxyServer } = require("./main/network/logserver.js");
 const { SettingsApi } = require("./main/settings/settingsapi.js");
 const os = require("os");
+const localtunnel = require("localtunnel");
 
 /**
  * @type {(import('./main/network/proxyapi.js').ProxyApi) | null}
@@ -20,9 +21,9 @@ let settingsApi = null;
 let proxyServer = null;
 
 /**
- * @type {import('@ngrok/ngrok').Listener | null}
+ * @type {import('localtunnel').Tunnel | null}
  */
-let ngrokListener = null;
+let tunnelListener = null;
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -61,27 +62,24 @@ app.whenReady().then(() => {
       console.log(`\tNetwork: http://${hostname}:${port}/`);
     });
 
-    // if (useTunnel) {
-    //   ngrok.forward({ addr: port }).then((listener) => {
-    //     const url = listener.url();
+    if (useTunnel) {
+      localtunnel({ port }).then((tunnel) => {
+        console.log(`\tTunnel established at: ${tunnel.url}`);
+        tunnelListener = tunnel;
 
-    //     console.log(`ngrok tunnel established at ${url}`);
-
-    //     ngrokListener = listener;
-
-    //     settingsApi.updateSettings({
-    //       port,
-    //       useTunnel,
-    //       tunnelUrl: url,
-    //     });
-    //   });
-    // }
+        settingsApi.updateSettings({
+          port,
+          useTunnel,
+          tunnelUrl: tunnel.url,
+        });
+      });
+    }
   });
 
   proxyApi.on("stop-recording", () => {
     // stop server logging
     proxyServer?.close();
-    ngrokListener?.close();
+    tunnelListener?.close();
   });
 });
 
