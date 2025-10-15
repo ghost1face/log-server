@@ -9,10 +9,25 @@ document.adoptedStyleSheets.push(styles);
 
 
 const MainScreen = () => {
+  /**
+   * @type {[boolean, import('react').SetStateAction<boolean>]}
+   */
   const [isRecording, setIsRecording] = useState(false);
+
+  /**
+   * @type {[string, import('react').SetStateAction<string>]}
+   */
   const [query, setQuery] = useState("");
+
+  /**
+   * @type {["timestamp" | "message", import('react').SetStateAction<"timestamp" | "message">]}
+   */
   const [sortBy, setSortBy] = useState("timestamp");
-  const [sortOrder, setSortOrder] = useState("asc");
+
+  /**
+   * @type {["asc" | "desc", import('react').SetStateAction<"asc" | "desc">]}
+   */
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const [logMessages, clearLogMessages] = useLogMessages();
   const filteredMessages = useFilterLogMessages(logMessages, query);
